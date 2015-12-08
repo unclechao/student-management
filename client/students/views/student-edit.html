@@ -1,0 +1,77 @@
+<div class="panel panel-info" data-ng-init="init()">
+    <div class="panel-heading">Here you will see and change the details of the employee:
+        <div class="panel-body">  
+            <div class="container-fluid ma-add-new-party-container">
+                <form name="employeeForm" ng-show="$root.currentUser" novalidate>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input name="employeeName" ng-model="employee.Name"  class="form-control" required />
+                        <span class="error" ng-show="studentForm.employeeName.$error.required">
+                            Please enter a name
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input name="employeeAge" ng-model="employee.Age" type="number" min="0" max="99" class="form-control" />
+                        <span class="error" ng-show="employeeForm.employeeAge.$error.number">
+                            Please enter a valid number
+                        </span>
+                    </div>
+                    <div class="form-group" ng-repeat="info in employee.EmployeeInfo">
+                        <label>Info</label> <input ng-model="info.Info">
+                        <button ng-click="removeEmployeeInfo($index)" class='btn btn-warning'>Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button ng-click="addEmployeeInfo()" ng-disabled="employeeForm.employeeName.$invalid" class="btn btn-primary">Add Employee Info</button>
+ 
+        <button class="btn btn-primary" ng-disabled="employeeForm.$invalid" ng-click="updateEmployee(employee._id,employee)">Save</button>
+        <button class="btn btn-primary" ui-sref="students">Cancel</button>
+    </div>
+</div>
+
+
+<div class="panel panel-info" data-ng-init="init()">
+    <div class="panel-heading">Here you will see and change the details of the student:
+        <div class="panel-body">  
+            <div class="container-fluid ma-add-new-party-container">
+                <form name="studentForm" ng-show="$root.currentUser" novalidate>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input name="stuName" ng-model="student.Name"  class="form-control" required />
+                        <span class="error" ng-show="studentForm.stuName.$error.required">
+                            Please enter a name
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input name="stuAge" ng-model="student.Age" type="number" min="0" max="99" class="form-control" />
+                        <span class="error" ng-show="studentForm.stuAge.$error.number">
+                            Please enter a valid number
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input name="stuEmail" type="email" ng-model="student.Email" class="form-control" />
+                        <span class="error" ng-show="studentForm.stuEmail.$error.email">
+                            Please enter a valid email
+                        </span>
+                    </div>
+                    <div class="form-group" ng-repeat="info in student.EducationInfo">
+                        <label>Info</label> <input ng-model="info.Info">
+                        <label>Start Date</label> <input ng-model="info.StartDate">
+                        <label>End Date</label> <input ng-model="info.EndDate">
+                        <button remove-info-btn-detail class='btn btn-warning'>Remove</button>
+                    </div>
+                    <div class="eduDiv" id="eduDiv"></div>
+                </form>
+            </div>
+        </div>
+        <button education-info-detail  class="btn btn-primary">Add Education Info</button>
+        <button class="btn btn-primary" ng-disabled="studentForm.$invalid" ng-click="save()">Save</button>
+        <button class="btn btn-primary" ng-click="reset()">Reset form</button>
+        <button class="btn btn-primary" ui-sref="students">Cancel</button>
+    </div>
+</div>
+

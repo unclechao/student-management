@@ -1,0 +1,153 @@
+<div class="alert alert-info" ng-hide="$root.currentUser || $root.loggingIn">
+    Loggin to opreate !
+</div>
+
+<div class="panel panel-info" ng-show="$root.currentUser || $root.loggingIn">
+    <div class="panel-heading">Add someone</div>
+    <div class="panel-body">  
+        <div class="container-fluid ma-add-new-party-container">
+            <form name="employeeForm" ng-show="$root.currentUser" novalidate>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input name="newEmployeeName" class="form-control" ng-model="newEmployee.Name" required />
+                    <span class="error" ng-show="employeeForm.newEmployeeName.$error.required">
+                        Please enter a name
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input name="newEmployeeAge" type="number" ng-model="newEmployee.Age" min="0" max="99" class="form-control"/>
+                    <span class="error" ng-show="employeeForm.newEmployeeAge.$error.number">
+                        Please enter a valid number
+                    </span>
+                </div>
+                <button ng-click="addNewEmployeeInfo()" ng-disabled="employeeForm.newEmployeeName.$invalid" class="btn btn-primary">Add Employee Info</button>
+                <div>
+                    <div ng-repeat="item in newEmployee.EmployeeInfo">
+                        <input ng-model="item.Info" />
+                        <button class="btn btn-warning" ng-click="removeNewEmployeeInfo($index)">remove employee info</button>
+                    </div>
+                </div>
+                <div class="panel"> 
+                    <button class="btn btn-primary" ng-disabled="employeeForm.$invalid" ng-click="addNewEmployee(newEmployee)">Add</button>
+                </div>
+                <div class="panel"> 
+                    <button class="btn btn-primary" ng-click="editSaveEmployee(newEmployee)">EditSave</button>
+                </div>
+            </form>
+
+            <form name="studentForm" ng-show="$root.currentUser" novalidate>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input name="newStuName" class="form-control" ng-model="newStudent.Name" required />
+                    <span class="error" ng-show="studentForm.newStuName.$error.required">
+                        Please enter a name
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input name="newStuAge" type="number" ng-model="newStudent.Age" min="0" max="99" class="form-control"/>
+                    <span class="error" ng-show="studentForm.newStuAge.$error.number">
+                        Please enter a valid number
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="newStuEmail" type="email" ng-model="newStudent.Email" class="form-control"/>
+                    <span class="error" ng-show="studentForm.newStuEmail.$error.email">
+                        Please enter a valid email
+                    </span>
+                </div>
+                <button education-info  class="btn btn-primary">Add Education Info</button>
+                <button remove-all-education-info ng-disabled="hasChild()" class="btn btn-warning">Remove All Education Info</button>
+                <div></div>
+                <div class="panel"> 
+                    <button class="btn btn-primary" ng-disabled="studentForm.$invalid" ng-click="addNewEmployee">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">Employees Info List</div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Info</th>
+                    <th>Action</th>
+                </tr>
+            </thead> 
+            <tbody>
+                <tr ng-repeat="e in employees">
+                    <td> {{$index + 1}} </td>
+                    <td>
+                        <a href="/employees/{{e._id}}">
+                            <div>{{e.Name}}</div>
+                        </a>
+                    </td>
+                    <td>{{e.Age}}</td>
+                    <td>
+                        <ul >
+                            <li ng-repeat="info in e.EmployeeInfo">
+                                Info: {{info.Info}}  
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" ng-disabled="!$root.currentUser" ng-click="deleteEmployee(e._id)"> Delete </button>
+                    <button class="btn btn-danger" ng-disabled="!$root.currentUser" ng-click="editEmployee(e._id)"> Edit </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">Students Info List</div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Info</th>
+                    <th>Editor</th>
+                    <th>Action</th>
+                </tr>
+            </thead> 
+            <tbody>
+                <tr dir-paginate="stu in students | itemsPerPage: perPage" total-items="studentsCount.count">
+                    <td> {{$index + 1}} </td>
+                    <td>
+                        <a href="/students/{{stu._id}}">
+                            <div>{{stu.Name}}</div>
+                        </a>
+                    </td>
+                    <td>{{stu.Age}}</td>
+                    <td>{{stu.Email}}</td>
+                    <td>
+                        <ul >
+                            <li ng-repeat="info in stu.EducationInfo">
+                                Info: {{info.Info}} {{info.StartDate}} ~ {{info.EndDate}}    
+                            </li>
+                        </ul>
+                    </td>
+                    <td>{{stu.Editor}}</td>
+                    <td><button class="btn btn-danger" ng-disabled="!$root.currentUser" ng-click="remove(stu)"> Delete </button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button style="float:right" class="btn btn-danger" ng-enable="$scope.students" ng-show="$root.currentUser" ng-click="removeAll()">Remove All</button>
+    </div>
+</div>
+<div>
+    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+</div>
